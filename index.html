@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f1e8">
+<title>MARD Beads Colour Inventory</title>
+<style>
+:root{--bg:#f7f1e8;--paper:#fffdf9;--ink:#302b29;--muted:#817873;--line:#eee5da;--pink:#f3d7d9;--green:#dcebdc;--yellow:#f8edc9;--purple:#e8e0f4;--shadow:0 12px 35px #55402a0c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-rounded,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:30px 20px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:16px;background:#f0d8d2;display:grid;place-items:center;font-size:25px}
+h1{font-size:clamp(23px,4vw,34px);margin:0;letter-spacing:-1px}.sub{color:var(--muted);margin:5px 0 0;font-size:14px}
+.pill{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 13px;color:var(--muted);font-size:12px;white-space:nowrap}
+.hero{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:var(--shadow);margin-bottom:20px}
+.hero h2{margin:0 0 7px;font-size:20px}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 22px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px}
+.stat .num{font-size:25px;font-weight:800}.stat .label{font-size:12px;color:var(--muted);margin-top:4px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input,select,button{font:inherit}input[type=search]{flex:1;min-width:180px;border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:12px 14px;outline:none}
+.filter{border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:11px 12px;color:var(--ink)}
+button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700}
+.primary{background:#423a37;color:white}.secondary{background:#f0e8df;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.series-heading{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:15px;font-weight:850;color:#71615a}
+.series-heading:after{content:"";height:1px;background:var(--line);flex:1}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.code{font-size:24px;font-weight:850;letter-spacing:-.7px}
+.tag{font-size:11px;font-weight:800;padding:7px 9px;border-radius:999px;white-space:nowrap}
+.tag.full{background:var(--green)}.tag.low{background:var(--yellow)}.tag.none{background:var(--purple)}.tag.unavailable{background:#eee8e5}
+.refill{font-size:12px;color:#a64b38;margin-top:12px;font-weight:700;min-height:18px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.controls select{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 7px;background:white;font-size:12px}
+.cardfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.small{font-size:11px;color:var(--muted)}.delete{background:transparent;color:#a36c65;padding:5px 7px;font-size:12px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:45px 15px;background:var(--paper);border:1px dashed #dfd3c7;border-radius:18px}
+.legend{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 0}.legend span{font-size:11px;color:var(--muted);background:#fffaf3;border:1px solid var(--line);padding:7px 9px;border-radius:99px}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:20px}
+.add-panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 16px;box-shadow:var(--shadow)}
+.add-panel summary{cursor:pointer;font-weight:800;color:var(--ink);list-style:none}
+.add-panel summary::-webkit-details-marker{display:none}
+.add-panel summary:after{content:"＋";float:right}
+.add-panel[open] summary:after{content:"−"}
+.add-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+.field{display:block;margin:0;min-width:0}.field span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field select{width:100%;min-width:0;border:1px solid var(--line);border-radius:11px;padding:11px;background:white}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+@media(max-width:600px){.add-fields{grid-template-columns:1fr}}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}header{align-items:flex-start}.pill{display:none}}
+@media(max-width:470px){.wrap{padding:22px 14px 45px}.grid{grid-template-columns:1fr}.hero{padding:19px}.controls{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo">🧵</div><div><h1>MARD Beads Colour Inventory</h1><p class="sub">My little MARD Beads collection · Katalog stok warna</p></div></div>
+  <div class="pill">✨ PERSONAL STOCK TRACKER</div>
+</header>
+<section class="hero">
+  <h2>Colour by colour, bead by bead 💗</h2>
+  <p>Rekod warna beads, pantau keadaan dalam papan dan semak stok refill. Tekan pilihan pada setiap kad untuk kemas kini inventori anda.</p>
+</section>
+<section class="stats" aria-label="Ringkasan stok">
+  <div class="stat"><div class="num" id="total">0</div><div class="label">Jumlah warna</div></div>
+  <div class="stat"><div class="num" id="fullCount">0</div><div class="label">Papan penuh 🔋</div></div>
+  <div class="stat"><div class="num" id="lowCount">0</div><div class="label">Perlu refill 🪫</div></div>
+  <div class="stat"><div class="num" id="alertCount">0</div><div class="label">Refill habis ⚠️</div></div>
+</section>
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Cari kod warna, contoh A11..." aria-label="Cari kod warna">
+  <select class="filter" id="filter"><option value="all">Semua status</option><option value="full">Papan penuh</option><option value="low">Perlu refill</option><option value="empty">Refill habis</option><option value="unavailable">Tidak dimiliki</option></select>
+  <select class="filter" id="seriesFilter" aria-label="Pilih series"><option value="all">Semua series</option><option value="A">Series A</option><option value="B">Series B</option><option value="C">Series C</option><option value="D">Series D</option><option value="E">Series E</option><option value="F">Series F</option><option value="G">Series G</option><option value="H">Series H</option><option value="M">Series M</option></select>
+  <button class="primary" id="addBtn">＋ Tambah warna</button>
+</div>
+<div class="grid" id="grid"></div>
+<div class="legend">
+  <span>🔋 FULL — beads dalam papan masih penuh</span>
+  <span>🪫 NEEDS REFILL — beads dalam papan hampir habis</span>
+  <span>⚠️ REFILL EMPTY — stok refill sudah habis</span>
+  <span>💤 UNAVAILABLE — warna belum dimiliki</span>
+</div>
+<p class="note">💡 Series: Kod akan dikelaskan secara automatik mengikut huruf pertama — A, B, C, D, E, F, G, H dan M. Contohnya A11 masuk Series A dan M7 masuk Series M. Gunakan pilihan “Semua series” untuk melihat semuanya atau pilih satu series sahaja. Status papan dan stok refill diasingkan. Jadi warna boleh ditanda <b>FULL 🔋</b> bersama <b>REFILL EMPTY ⚠️</b> jika papan masih penuh tetapi tiada stok simpanan. Data disimpan secara automatik dalam browser/peranti ini sahaja.</p>
+</div>
+
+<details class="add-panel" id="addPanel">
+ <summary>Tambah warna beads ✨</summary>
+ <form id="addForm">
+  <div class="add-fields">
+   <label class="field"><span>Kod warna</span><input id="newCode" placeholder="Contoh: A11" maxlength="12" required></label>
+   <label class="field"><span>Status papan</span><select id="newBoard"><option value="full">FULL 🔋</option><option value="low">NEEDS REFILL 🪫</option><option value="unavailable">UNAVAILABLE 💤</option></select></label>
+   <label class="field"><span>Stok refill</span><select id="newRefill"><option value="available">Ada stok refill</option><option value="empty">REFILL EMPTY ⚠️</option></select></label>
+  </div>
+  <div class="actions"><button class="primary" type="submit">Simpan warna</button></div>
+ </form>
+</details>
+<script>
+const starter = [
+ {code:"A11",board:"low",refill:"available"},
+ {code:"B5",board:"full",refill:"available"},
+ {code:"H7",board:"full",refill:"empty"},
+ {code:"G1",board:"unavailable",refill:"empty"}
+];
+let items;
+try { items = JSON.parse(localStorage.getItem("mardBeadsInventory")) || starter; } catch(e) { items = starter; }
+const $ = id => document.getElementById(id);
+const labels = {full:"FULL 🔋",low:"NEEDS REFILL 🪫",unavailable:"UNAVAILABLE 💤"};
+function save(){localStorage.setItem("mardBeadsInventory",JSON.stringify(items));}
+const seriesOrder = ["A","B","C","D","E","F","G","H","M"];
+function getSeries(code){return (String(code).trim().match(/^[A-Za-z]/)||[""])[0].toUpperCase();}
+function render(){
+ const query=$("search").value.trim().toLowerCase(), filter=$("filter").value, selectedSeries=$("seriesFilter").value;
+ const visible=items.filter(x=>{
+   const matches=x.code.toLowerCase().includes(query);
+   const byFilter=filter==="all" || (filter==="empty"?x.refill==="empty":filter==="unavailable"?x.board==="unavailable":x.board===filter);
+   const bySeries=selectedSeries==="all" || getSeries(x.code)===selectedSeries;
+   return matches&&byFilter&&bySeries;
+ });
+ $("total").textContent=items.length;
+ $("fullCount").textContent=items.filter(x=>x.board==="full").length;
+ $("lowCount").textContent=items.filter(x=>x.board==="low").length;
+ $("alertCount").textContent=items.filter(x=>x.refill==="empty"&&x.board!=="unavailable").length;
+
+ const groups = selectedSeries==="all"
+   ? seriesOrder.map(s=>[s,visible.filter(x=>getSeries(x.code)===s)]).filter(([s,list])=>list.length)
+   : [[selectedSeries,visible]];
+ let output="";
+ groups.forEach(([series,list])=>{
+   list.sort((a,b)=>a.code.localeCompare(b.code,undefined,{numeric:true}));
+   output += `<div class="series-heading">Series ${series} <span class="small">(${list.length} warna)</span></div>`;
+   output += list.map(x=>{
+     const index=items.indexOf(x);
+     const refillText=x.board==="unavailable"?"":(x.refill==="empty"?"⚠️ REFILL EMPTY — perlu beli stok baru":"✓ Refill tersedia");
+     return `<article class="card">
+      <div class="cardtop"><div class="code">${escapeHtml(x.code)}</div><span class="tag ${x.board}">${labels[x.board]}</span></div>
+      <div class="refill">${refillText}</div>
+      <div class="controls">
+        <select aria-label="Status papan ${escapeHtml(x.code)}" onchange="changeItem(${index},'board',this.value)">
+         <option value="full" ${x.board==="full"?"selected":""}>FULL 🔋</option>
+         <option value="low" ${x.board==="low"?"selected":""}>NEEDS REFILL 🪫</option>
+         <option value="unavailable" ${x.board==="unavailable"?"selected":""}>UNAVAILABLE 💤</option>
+        </select>
+        <select aria-label="Stok refill ${escapeHtml(x.code)}" ${x.board==="unavailable"?"disabled":""} onchange="changeItem(${index},'refill',this.value)">
+         <option value="available" ${x.refill==="available"?"selected":""}>Refill ada</option>
+         <option value="empty" ${x.refill==="empty"?"selected":""}>Refill habis ⚠️</option>
+        </select>
+      </div>
+      <div class="cardfoot"><span class="small">Series ${series}</span><button class="delete" onclick="removeItem(${index})">Buang ✕</button></div>
+     </article>`;
+   }).join("");
+ });
+ $("grid").innerHTML=output || `<div class="empty">Tiada warna dijumpai dalam pilihan ini. Cuba carian atau series lain. 🌷</div>`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+window.changeItem=(i,key,value)=>{items[i][key]=value;save();render();};
+window.removeItem=i=>{if(confirm(`Buang warna ${items[i].code} daripada katalog?`)){items.splice(i,1);save();render();}};
+$("search").addEventListener("input",render);$("filter").addEventListener("change",render);$("seriesFilter").addEventListener("change",render);
+$("addBtn").addEventListener("click",()=>{
+ const panel=$("addPanel");
+ panel.open=true;
+ panel.scrollIntoView({behavior:"smooth",block:"center"});
+ $("newCode").focus({preventScroll:true});
+});
+$("addForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const code=$("newCode").value.trim().toUpperCase();
+ if(!/^[A-Z][0-9]+$/.test(code)){
+   alert("Sila masukkan kod seperti A11 atau M7.");
+   $("newCode").focus();
+   return;
+ }
+ if(items.some(x=>x.code.toUpperCase()===code)){
+   alert("Kod warna ini sudah ada dalam katalog.");
+   $("newCode").focus();
+   return;
+ }
+ items.push({code,board:$("newBoard").value,refill:$("newRefill").value});
+ try { save(); } catch(err) { alert("Warna ditambah untuk sesi ini, tetapi browser tidak membenarkan simpanan kekal. Cuba buka website terus melalui Safari."); }
+ $("addForm").reset();
+ $("addPanel").open=false;
+ render();
+});
+render();
+</script>
+</body>
+</html>
